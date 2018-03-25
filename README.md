@@ -3,6 +3,8 @@
 YAGES (yet another gRPC echo server) is an educational gRPC server implementation. The goal is to learn gRPC and communicate best practices around its deployment and usage in the context of Kubernetes.
 
 - [As an Kubernetes app](#as-an-kubernetes-app)
+  - [From inside the cluster](#from-inside-the-cluster)
+  - [From outside the cluster](#from-outside-the-cluster)
 - [As a local app](#as-a-local-app)
   - [Install](#install)
   - [Use](#use)
@@ -10,6 +12,32 @@ YAGES (yet another gRPC echo server) is an educational gRPC server implementatio
 
 ## As an Kubernetes app
 
+You can install YAGES as an app in your Kubernetes cluster (tested with v1.9) like so:
+
+```bash
+$ kubectl apply -f app.yaml
+```
+
+Then, in order to invoke the service you've got essentially two options: from inside the cluster or from the outside the cluster, by exposing the service.
+
+## From inside the cluster
+
+To access the gRPC server from inside the clsuter, use a jump pod that supports Go like shown in the following:
+
+```bash
+$ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest  -- bash
+@jumpod:/$ go get github.com/fullstorydev/grpcurl
+@jumpod:/$ cd $GOPATH/src/github.com/fullstorydev/grpcurl/cmd/grpcurl
+@jumpod:/go/src/github.com/fullstorydev/grpcurl/cmd/grpcurl$ go install
+@jumpod:/go/src/github.com/fullstorydev/grpcurl/cmd/grpcurl$ grpcurl --plaintext yages.grpc-demo:9000 yages.Echo.Ping
+{
+  "text": "pong"
+}
+```
+
+## From outside the cluster
+
+TBD: Using Ingress as shown in [ingress.yaml](ingress.yaml) or an OpenShift Route object with TLS passthrough set.
 
 ## As a local app
 
