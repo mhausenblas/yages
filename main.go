@@ -42,6 +42,7 @@ func (s *Server) Listen() error {
 	gs := grpc.NewServer()
 	yages.RegisterEchoServer(gs, s)
 	reflection.Register(gs)
+	log.Printf("YAGES serving on %v is ready for gRPC clients", s.bind)
 	return gs.Serve(ln)
 }
 

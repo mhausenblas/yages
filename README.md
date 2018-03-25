@@ -19,8 +19,24 @@ $ protoc \
 
 Executing above command results in the auto-generated file `yages/yages-schema.pb.go`. Do not manually edit this file, or in other words: if you add a new message or service to the schema, just run above `protoc` command again and you'll get an updated version of `yages-schema.pb.go`. 
 
-Now you can run `go run main.go` or `go install` and in a second terminal session, using [grpcurl](https://github.com/fullstorydev/grpcurl), you do:
+Now you can run `go run main.go` or `go install`:
 
 ```bash
-$ grpcurl -plaintext localhost:9000 list
+$ yages
+2018/03/25 15:32:21 YAGES serving on 0.0.0.0:9000 is ready for gRPC clients
 ```
+
+… and in a second terminal session, using [grpcurl](https://github.com/fullstorydev/grpcurl), you do:
+
+```bash
+$ grpcurl --plaintext localhost:9000 list
+grpc.reflection.v1alpha.ServerReflection
+yages.Echo
+
+$ cat echo.json | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Send
+{
+  "text": "echo"
+}
+```
+
+Note that you can also do `grpcurl --plaintext localhost:9000 describe` to get further details on the available services.
