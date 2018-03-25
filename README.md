@@ -15,7 +15,7 @@ YAGES (yet another gRPC echo server) is an educational gRPC server implementatio
 You can install YAGES as an app in your Kubernetes cluster (tested with v1.9) like so:
 
 ```bash
-$ kubectl apply -f app.yaml
+$ kubectl apply -f http://mhausenblas.info/yages/app.yaml
 ```
 
 Then, in order to invoke the service you've got essentially two options: from inside the cluster or from the outside the cluster, by exposing the service.
