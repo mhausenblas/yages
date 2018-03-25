@@ -4,8 +4,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"sort"
-	"strings"
 
 	"github.com/mhausenblas/yages/yages"
 
@@ -55,14 +53,19 @@ func (s *Server) Listen() error {
 	return gs.Serve(ln)
 }
 
-// Send returns the same message it received.
-func (s *Server) Simple(ctx context.Context, msg *yages.Content) (*yages.Content, error) {
-	return &yages.Content{Text: msg.Text}, nil
+// Ping returns a "pong" (constant message).
+func (s *Server) Ping(ctx context.Context, _ *yages.Empty) (*yages.Content, error) {
+	return &yages.Content{Text: "pong"}, nil
 }
 
 // Reverse returns the message it received in reverse order.
 func (s *Server) Reverse(ctx context.Context, msg *yages.Content) (*yages.Content, error) {
-	r := strings.Split(msg.Text, " ")
-	sort.Sort(sort.Reverse(sort.StringSlice(r)))
-	return &yages.Content{Text: strings.Join(r, " ")}, nil
+	revstr := func(s string) string {
+		r := []rune(s)
+		for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
+			r[i], r[j] = r[j], r[i]
+		}
+		return string(r)
+	}
+	return &yages.Content{Text: revstr(msg.Text)}, nil
 }

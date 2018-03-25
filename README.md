@@ -33,10 +33,12 @@ $ grpcurl --plaintext localhost:9000 list
 grpc.reflection.v1alpha.ServerReflection
 yages.Echo
 
-$ cat echo.json | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Send
+$ grpcurl --plaintext localhost:9000 yages.Echo.Ping
 {
-  "text": "echo"
+  "text": "pong"
 }
+
+
 ```
 
 Note that you can also do `grpcurl --plaintext localhost:9000 describe` to get further details on the available services.
