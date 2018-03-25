@@ -10,5 +10,6 @@ message Content {
 // The echo YAGES service replies with the message it received.
 service Echo {
   rpc Send(Content) returns (Content) {}
+  rpc Reverse(Content) returns (Content) {}
 }
 
