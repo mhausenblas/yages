@@ -4,12 +4,18 @@ import (
 	"log"
 	"net"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/mhausenblas/yages/yages"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+)
+
+var (
+	release string
 )
 
 func main() {
@@ -42,11 +48,21 @@ func (s *Server) Listen() error {
 	gs := grpc.NewServer()
 	yages.RegisterEchoServer(gs, s)
 	reflection.Register(gs)
-	log.Printf("YAGES serving on %v is ready for gRPC clients", s.bind)
+	if release == "" {
+		release = "dev"
+	}
+	log.Printf("YAGES in version %v serving on %v is ready for gRPC clients …", release, s.bind)
 	return gs.Serve(ln)
 }
 
 // Send returns the same message it received.
-func (s *Server) Send(ctx context.Context, msg *yages.Content) (*yages.Content, error) {
+func (s *Server) Simple(ctx context.Context, msg *yages.Content) (*yages.Content, error) {
 	return &yages.Content{Text: msg.Text}, nil
+}
+
+// Reverse returns the message it received in reverse order.
+func (s *Server) Reverse(ctx context.Context, msg *yages.Content) (*yages.Content, error) {
+	r := strings.Split(msg.Text, " ")
+	sort.Sort(sort.Reverse(sort.StringSlice(r)))
+	return &yages.Content{Text: strings.Join(r, " ")}, nil
 }

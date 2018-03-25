@@ -8,6 +8,7 @@ It is generated from these files:
 	yages-schema.proto
 
 It has these top-level messages:
+	Empty
 	Content
 */
 package yages
@@ -32,6 +33,15 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
+// Empty is the null value for parameters.
+type Empty struct {
+}
+
+func (m *Empty) Reset()                    { *m = Empty{} }
+func (m *Empty) String() string            { return proto.CompactTextString(m) }
+func (*Empty) ProtoMessage()               {}
+func (*Empty) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+
 // Content is the payload used in YAGES services.
 type Content struct {
 	Text string `protobuf:"bytes,1,opt,name=text" json:"text,omitempty"`
@@ -40,7 +50,7 @@ type Content struct {
 func (m *Content) Reset()                    { *m = Content{} }
 func (m *Content) String() string            { return proto.CompactTextString(m) }
 func (*Content) ProtoMessage()               {}
-func (*Content) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (*Content) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *Content) GetText() string {
 	if m != nil {
@@ -50,6 +60,7 @@ func (m *Content) GetText() string {
 }
 
 func init() {
+	proto.RegisterType((*Empty)(nil), "yages.Empty")
 	proto.RegisterType((*Content)(nil), "yages.Content")
 }
 
@@ -64,7 +75,7 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for Echo service
 
 type EchoClient interface {
-	Send(ctx context.Context, in *Content, opts ...grpc.CallOption) (*Content, error)
+	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Content, error)
 	Reverse(ctx context.Context, in *Content, opts ...grpc.CallOption) (*Content, error)
 }
 
@@ -76,9 +87,9 @@ func NewEchoClient(cc *grpc.ClientConn) EchoClient {
 	return &echoClient{cc}
 }
 
-func (c *echoClient) Send(ctx context.Context, in *Content, opts ...grpc.CallOption) (*Content, error) {
+func (c *echoClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Content, error) {
 	out := new(Content)
-	err := grpc.Invoke(ctx, "/yages.Echo/Send", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/yages.Echo/Ping", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +108,7 @@ func (c *echoClient) Reverse(ctx context.Context, in *Content, opts ...grpc.Call
 // Server API for Echo service
 
 type EchoServer interface {
-	Send(context.Context, *Content) (*Content, error)
+	Ping(context.Context, *Empty) (*Content, error)
 	Reverse(context.Context, *Content) (*Content, error)
 }
 
@@ -105,20 +116,20 @@ func RegisterEchoServer(s *grpc.Server, srv EchoServer) {
 	s.RegisterService(&_Echo_serviceDesc, srv)
 }
 
-func _Echo_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Content)
+func _Echo_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EchoServer).Send(ctx, in)
+		return srv.(EchoServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/yages.Echo/Send",
+		FullMethod: "/yages.Echo/Ping",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EchoServer).Send(ctx, req.(*Content))
+		return srv.(EchoServer).Ping(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,8 +157,8 @@ var _Echo_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*EchoServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Send",
-			Handler:    _Echo_Send_Handler,
+			MethodName: "Ping",
+			Handler:    _Echo_Ping_Handler,
 		},
 		{
 			MethodName: "Reverse",
@@ -161,13 +172,14 @@ var _Echo_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("yages-schema.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 123 bytes of a gzipped FileDescriptorProto
+	// 138 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xaa, 0x4c, 0x4c, 0x4f,
 	0x2d, 0xd6, 0x2d, 0x4e, 0xce, 0x48, 0xcd, 0x4d, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62,
-	0x05, 0x8b, 0x29, 0xc9, 0x72, 0xb1, 0x3b, 0xe7, 0xe7, 0x95, 0xa4, 0xe6, 0x95, 0x08, 0x09, 0x71,
-	0xb1, 0x94, 0xa4, 0x56, 0x94, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81, 0xd9, 0x46, 0xb1,
-	0x5c, 0x2c, 0xae, 0xc9, 0x19, 0xf9, 0x42, 0x1a, 0x5c, 0x2c, 0xc1, 0xa9, 0x79, 0x29, 0x42, 0x7c,
-	0x7a, 0x60, 0x6d, 0x7a, 0x50, 0x3d, 0x52, 0x68, 0x7c, 0x25, 0x06, 0x21, 0x6d, 0x2e, 0xf6, 0xa0,
-	0xd4, 0xb2, 0xd4, 0xa2, 0xe2, 0x54, 0xc2, 0x8a, 0x93, 0xd8, 0xc0, 0x6e, 0x31, 0x06, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0x69, 0xda, 0xb0, 0x48, 0xa1, 0x00, 0x00, 0x00,
+	0x05, 0x8b, 0x29, 0xb1, 0x73, 0xb1, 0xba, 0xe6, 0x16, 0x94, 0x54, 0x2a, 0xc9, 0x72, 0xb1, 0x3b,
+	0xe7, 0xe7, 0x95, 0xa4, 0xe6, 0x95, 0x08, 0x09, 0x71, 0xb1, 0x94, 0xa4, 0x56, 0x94, 0x48, 0x30,
+	0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81, 0xd9, 0x46, 0xd1, 0x5c, 0x2c, 0xae, 0xc9, 0x19, 0xf9, 0x42,
+	0x6a, 0x5c, 0x2c, 0x01, 0x99, 0x79, 0xe9, 0x42, 0x3c, 0x7a, 0x60, 0xfd, 0x7a, 0x60, 0xcd, 0x52,
+	0x7c, 0x50, 0x1e, 0xd4, 0x04, 0x25, 0x06, 0x21, 0x6d, 0x2e, 0xf6, 0xa0, 0xd4, 0xb2, 0xd4, 0xa2,
+	0xe2, 0x54, 0x21, 0x34, 0x49, 0x4c, 0xc5, 0x49, 0x6c, 0x60, 0x27, 0x19, 0x03, 0x02, 0x00, 0x00,
+	0xff, 0xff, 0xf9, 0xbb, 0xa9, 0x9f, 0xa8, 0x00, 0x00, 0x00,
 }
