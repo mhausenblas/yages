@@ -1,20 +1,22 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net"
+	"os"
 
 	"github.com/mhausenblas/yages/yages"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
-	var ipnport string
-	flag.StringVar(&ipnport, "ipnport", "0.0.0.0:9000", "IP and port to bind to in the format `ip:port` with a default of `0.0.0.0:9000`.")
-	flag.Parse()
+	ipnport := "0.0.0.0:9000"
+	if ie := os.Getenv("YAGES_BIND"); ie != "" {
+		ipnport = ie
+	}
 	err := New(ipnport).Listen()
 	if err != nil {
 		log.Fatalf("Failed to launch the YAGES due to %v", err)
@@ -37,9 +39,10 @@ func (s *Server) Listen() error {
 	if err != nil {
 		return err
 	}
-	srv := grpc.NewServer()
-	yages.RegisterEchoServer(srv, s)
-	return srv.Serve(ln)
+	gs := grpc.NewServer()
+	yages.RegisterEchoServer(gs, s)
+	reflection.Register(gs)
+	return gs.Serve(ln)
 }
 
 // Send returns the same message it received.
