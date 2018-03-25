@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package yages;
+
+// Content is the payload used in YAGES services.
+message Content {
+  string text = 1;
+}
+
+// The echo YAGES service replies with the message it received.
+service Echo {
+  rpc Send(Content) returns (Content) {}
+}
+

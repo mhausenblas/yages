@@ -1,2 +1,3 @@
-# yages
-yet another gRPC echo server
+# Yet another gRPC echo server
+
+
