@@ -20,12 +20,12 @@ $ kubectl apply -f http://mhausenblas.info/yages/app.yaml
 
 Then, in order to invoke the service you've got essentially two options: from inside the cluster or from the outside the cluster, by exposing the service.
 
-## From inside the cluster
+### From inside the cluster
 
 To access the gRPC server from inside the clsuter, use a jump pod that supports Go like shown in the following:
 
 ```bash
-$ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest  -- bash
+$ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest -- bash
 @jumpod:/$ go get github.com/fullstorydev/grpcurl
 @jumpod:/$ cd $GOPATH/src/github.com/fullstorydev/grpcurl/cmd/grpcurl
 @jumpod:/go/src/github.com/fullstorydev/grpcurl/cmd/grpcurl$ go install
@@ -35,7 +35,7 @@ $ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest  -- bash
 }
 ```
 
-## From outside the cluster
+### From outside the cluster
 
 TBD: Using Ingress as shown in [ingress.yaml](ingress.yaml) or an OpenShift Route object with TLS passthrough set.
 
