@@ -39,12 +39,12 @@ $ grpcurl --plaintext localhost:9000 yages.Echo.Ping
 {
   "text": "pong"
 }
-# invoke the reverse method with direct params:
-$ echo '{ "text" : "some fun here" }' | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Reverse
+# invoke the reverse method with parameter:
+$ grpcurl --plaintext -d '{ "text" : "some fun here" }' localhost:9000 yages.Echo.Reverse
 {
   "text": "ereh nuf emos"
 }
-# invoke the reverse method with params from JSON file:
+# invoke the reverse method with parameter from JSON file:
 $ cat echo.json | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Reverse
 {
   "text": "ohce"
