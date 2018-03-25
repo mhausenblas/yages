@@ -1,0 +1,37 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: yages
+  name: yages
+  namespace: grpc-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: yages
+    spec:
+      containers:
+      - name: stock-gen
+        image: quay.io/mhausenblas/yages:0.1.0
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yages
+  name: yages
+  namespace: grpc-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: yages
