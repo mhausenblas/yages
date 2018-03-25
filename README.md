@@ -29,16 +29,20 @@ $ yages
 … and in a second terminal session, using [grpcurl](https://github.com/fullstorydev/grpcurl), you do:
 
 ```bash
-$ grpcurl --plaintext localhost:9000 list
-grpc.reflection.v1alpha.ServerReflection
-yages.Echo
-
 $ grpcurl --plaintext localhost:9000 yages.Echo.Ping
 {
   "text": "pong"
 }
 
+$ echo '{ "text" : "some fun here" }' | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Reverse
+{
+  "text": "ereh nuf emos"
+}
 
+$ cat echo.json | grpcurl --plaintext -d @ localhost:9000 yages.Echo.Reverse
+{
+  "text": "ohce"
+}
 ```
 
-Note that you can also do `grpcurl --plaintext localhost:9000 describe` to get further details on the available services.
+Note that you can execute `grpcurl --plaintext localhost:9000 list` and `grpcurl --plaintext localhost:9000 describe` to get further details on the available services and their respective methods.
