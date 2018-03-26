@@ -26,6 +26,16 @@ metadata:
     app: yages
   name: yages
   namespace: grpc-demo
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind: Mapping
+      name: grpc_mapping
+      grpc: true
+      prefix: /echo/
+      rewrite: /yages.Echo/
+      service: yages.grpc-demo:9000
 spec:
   type: ClusterIP
   ports:
