@@ -22,7 +22,7 @@ Then, in order to invoke the service you've got essentially two options: from in
 
 ### From inside the cluster
 
-To access the gRPC server from inside the clsuter, use a jump pod that supports Go like shown in the following:
+To access the gRPC server from inside the cluster, use a jump pod that supports Go like shown in the following:
 
 ```bash
 $ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest -- bash

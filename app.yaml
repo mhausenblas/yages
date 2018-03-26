@@ -13,7 +13,7 @@ spec:
         app: yages
     spec:
       containers:
-      - name: stock-gen
+      - name: grpcsrv
         image: quay.io/mhausenblas/yages:0.1.0
         ports:
         - containerPort: 9000
@@ -37,7 +37,8 @@ metadata:
       rewrite: /yages.Echo/
       service: yages.grpc-demo:9000
 spec:
-  type: ClusterIP
+  # type: ClusterIP
+  type: NodePort
   ports:
   - name: http
     port: 9000

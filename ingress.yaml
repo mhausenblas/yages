@@ -12,7 +12,11 @@ spec:
   - host:
     http:
       paths:
-      - path: /grpc
+      - path: /direct
         backend:
-          serviceName: ambassador
-          servicePort: 8877
+          serviceName: yages
+          servicePort: 9000
+      # - path: /ambassador
+      #   backend:
+      #     serviceName: ambassador
+      #     servicePort: 8877
