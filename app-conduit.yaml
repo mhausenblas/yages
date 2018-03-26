@@ -1,0 +1,98 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: yages
+  name: yages
+  namespace: grpc-demo-conduit
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        conduit.io/created-by: conduit/cli v0.3.1
+        conduit.io/proxy-version: v0.3.1
+      creationTimestamp: null
+      labels:
+        app: yages
+        conduit.io/control-plane-ns: conduit
+    spec:
+      containers:
+      - image: quay.io/mhausenblas/yages:0.1.0
+        name: grpcsrv
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        resources: {}
+      - env:
+        - name: CONDUIT_PROXY_LOG
+          value: warn,conduit_proxy=info
+        - name: CONDUIT_PROXY_CONTROL_URL
+          value: tcp://proxy-api.conduit.svc.cluster.local:8086
+        - name: CONDUIT_PROXY_CONTROL_LISTENER
+          value: tcp://0.0.0.0:4190
+        - name: CONDUIT_PROXY_PRIVATE_LISTENER
+          value: tcp://127.0.0.1:4140
+        - name: CONDUIT_PROXY_PUBLIC_LISTENER
+          value: tcp://0.0.0.0:4143
+        - name: CONDUIT_PROXY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CONDUIT_PROXY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CONDUIT_PROXY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: gcr.io/runconduit/proxy:v0.3.1
+        imagePullPolicy: IfNotPresent
+        name: conduit-proxy
+        ports:
+        - containerPort: 4143
+          name: conduit-proxy
+        resources: {}
+        securityContext:
+          runAsUser: 2102
+      initContainers:
+      - args:
+        - --incoming-proxy-port
+        - "4143"
+        - --outgoing-proxy-port
+        - "4140"
+        - --proxy-uid
+        - "2102"
+        - --inbound-ports-to-ignore
+        - "4190"
+        image: gcr.io/runconduit/proxy-init:v0.3.1
+        imagePullPolicy: IfNotPresent
+        name: conduit-init
+        resources: {}
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+          privileged: false
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yages
+  name: yages
+  namespace: grpc-demo-conduit
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: yages
+---
