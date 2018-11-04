@@ -12,7 +12,7 @@ YAGES (yet another gRPC echo server) is an educational gRPC server implementatio
 
 ## As an Kubernetes app
 
-You can install YAGES as an app in your Kubernetes cluster (tested with v1.9) like so:
+You can install YAGES as an app in your Kubernetes cluster (tested with Kubernetes v1.9, v1.10, and v1.11) like so:
 
 ```bash
 $ kubectl apply -f http://mhausenblas.info/yages/app.yaml
@@ -22,14 +22,13 @@ Then, in order to invoke the service you've got essentially two options: from in
 
 ### From inside the cluster
 
-To access the gRPC server from inside the cluster, use a jump pod that supports Go like shown in the following:
+To access the gRPC server from inside the cluster, you can for example use the [gump](https://quay.io/repository/mhausenblas/gump) container image that has [grpcurl](https://github.com/fullstorydev/grpcurl) installed:
+
 
 ```bash
-$ kubectl run -i -t --rm jumpod --restart=Never --image=golang:latest -- bash
-@jumpod:/$ go get github.com/fullstorydev/grpcurl
-@jumpod:/$ cd $GOPATH/src/github.com/fullstorydev/grpcurl/cmd/grpcurl
-@jumpod:/go/src/github.com/fullstorydev/grpcurl/cmd/grpcurl$ go install
-@jumpod:/go/src/github.com/fullstorydev/grpcurl/cmd/grpcurl$ grpcurl --plaintext yages.grpc-demo:9000 yages.Echo.Ping
+$ kubectl run -it --rm grpcurl --restart=Never --image=quay.io/mhausenblas/gump:0.1 -- sh 
+If you don't see a command prompt, try pressing enter.
+/go $ grpcurl --plaintext yages:9000 yages.Echo.Ping
 {
   "text": "pong"
 }
